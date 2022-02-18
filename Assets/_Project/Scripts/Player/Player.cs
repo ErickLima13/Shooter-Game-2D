@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] [Range(0, 10)] private float speed = 4f;
     [SerializeField] [Range(0, 10)] private float jumpForce = 7f;
-    private float xvelocity;
+    private float xVelocity;
     private float originalXScale;
 
     private bool isfire;
@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
         Jump();
         Shoot();
 
-        if (xvelocity * direction < 0)
+        if (xVelocity * direction < 0)
         {
             Flip();
         }
@@ -82,13 +82,19 @@ public class Player : MonoBehaviour
         Movement();
         UpdateGround();
         if (isGrounded)
-            audioPlayer.PlaySteps(groundType, Mathf.Abs(xvelocity));
+            audioPlayer.PlaySteps(groundType, Mathf.Abs(xVelocity));
     }
 
     private void LateUpdate()
     {
-        //animator.SetTrigger("die");
-        animator.SetFloat("xVelocity", Mathf.Abs(xvelocity));
+        //if ()
+        //{
+            //animator.SetTrigger("die");
+        //    return;
+        //}
+
+
+        animator.SetFloat("xVelocity", Mathf.Abs(xVelocity));
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("yVelocity", rb2d.velocity.y);
 
@@ -110,8 +116,8 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        xvelocity = movement.normalized.x * speed;
-        rb2d.velocity = new Vector2(xvelocity, rb2d.velocity.y);
+        xVelocity = movement.normalized.x * speed;
+        rb2d.velocity = new Vector2(xVelocity, rb2d.velocity.y);
     }
 
     private void Jump()
@@ -138,10 +144,7 @@ public class Player : MonoBehaviour
         if(!isGrounded && Input.GetButtonDown("Fire1") && !isfire)
         {
             animator.SetTrigger("jumpFire");
-            return;
         }
-
-
     }
 
     public void Shooted()

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public int damage;
+
     public Vector2 direction;
 
     [SerializeField] [Range(0, 10)] private float speed;
@@ -11,6 +13,8 @@ public class Bullet : MonoBehaviour
     public GameObject explosion;
 
     protected Animator animator;
+
+    protected SpriteRenderer _renderer;
 
     [SerializeField] [Range(0, 10)] protected float livingTime = 3f;
 
@@ -21,16 +25,12 @@ public class Bullet : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = explosion.GetComponent<Animator>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Awake()
     {
         Initiazalition();
-    }
-
-    protected virtual void Start()
-    {
-        //Destroy(gameObject, livingTime);
     }
 
     protected virtual void FixedUpdate()
@@ -41,10 +41,9 @@ public class Bullet : MonoBehaviour
         if(livingTime < 0)
         {
             gameObject.SetActive(false);
-            livingTime = 3f;
+            livingTime = 2f;
         }
     }
-
 
     protected virtual void Movement()
     {
@@ -52,15 +51,19 @@ public class Bullet : MonoBehaviour
         rb.velocity = movement;
     }
 
-    public void Explode()
+    public IEnumerator Explosion()
     {
-        speed = 0f;
+        speed = 0;
+        _renderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
-        if(explosion != null)
-        {
-            explosion.SetActive(true);
-        }
-        //Destroy(gameObject, 1.5f);
+        explosion.SetActive(true);
+ 
+        yield return new WaitForSeconds(0.1f);
+
+        speed = 10;
         gameObject.SetActive(false);
+        _renderer.enabled = true;
+        GetComponent<BoxCollider2D>().enabled = true;
+        explosion.SetActive(false);
     }
 }

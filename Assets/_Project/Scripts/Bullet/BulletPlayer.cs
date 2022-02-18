@@ -9,11 +9,6 @@ public class BulletPlayer : Bullet
         base.Awake();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
     protected override  void FixedUpdate()
     {
         base.FixedUpdate();
@@ -21,6 +16,10 @@ public class BulletPlayer : Bullet
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        if (collision.gameObject.TryGetComponent(out Status status))
+        {
+            collision.gameObject.GetComponent<Status>().DamageControl(damage);
+            StartCoroutine(Explosion());
+        }
     }
 }
